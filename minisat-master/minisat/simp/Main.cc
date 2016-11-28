@@ -54,6 +54,7 @@ int main(int argc, char** argv)
 {
     try 
     {
+        int success_counter = 0;
 
         std::ifstream example_fin("partial_examples");
         int num_examples;
@@ -68,7 +69,7 @@ int main(int argc, char** argv)
                 fout << next << std::endl;
             }
             // system("cp from.ogv to.ogv");
-            
+
             std::ifstream query_fin("query");
             getline(query_fin,next);
             fout<<next<<std::endl;
@@ -178,6 +179,7 @@ int main(int argc, char** argv)
             printf(ret == l_True ? "SATISFIABLE\n" : ret == l_False ? "UNSATISFIABLE\n" : "INDETERMINATE\n");
             if (res != NULL){
                 if (ret == l_True){
+                    success_counter++;
                     fprintf(res, "SAT\n");
                     for (int i = 0; i < S.nVars(); i++)
                         if (S.model[i] != l_Undef)
@@ -195,6 +197,7 @@ int main(int argc, char** argv)
 // #else
 //         return (ret == l_True ? 10 : ret == l_False ? 20 : 0);
 // #endif
+        std::cout<<"Ratio of Success: "<< success_counter*1.0/num_examples<<std::endl;
         return 0;
     } catch (OutOfMemoryException&){
         printf("===============================================================================\n");
