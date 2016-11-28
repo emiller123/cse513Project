@@ -54,6 +54,7 @@ int main(int argc, char** argv)
 {
     try 
     {
+
         std::ifstream example_fin("partial_examples");
         int num_examples;
         example_fin>>num_examples;
@@ -67,6 +68,12 @@ int main(int argc, char** argv)
                 fout << next << std::endl;
             }
             // system("cp from.ogv to.ogv");
+            
+            std::ifstream query_fin("query");
+            getline(query_fin,next);
+            fout<<next<<std::endl;
+            query_fin.close(); 
+
 
             int num_attributes;
             example_fin>>num_attributes;
