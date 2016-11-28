@@ -54,18 +54,31 @@ int main(int argc, char** argv)
 {
     try 
     {
-        int success_counter = 0;
+        std::string filename = argv[1];
+        std::string full_path;
+        full_path += "CNF_files/" + filename;
+        std::ifstream setup_fin(full_path.c_str());
+        std::ofstream setup_fout(argv[1]);
+        std::string new_line;
+        while( getline(setup_fin, new_line) ) 
+        {
+            setup_fout << new_line << std::endl;
+        }
 
+        int success_counter = 0;
         std::ifstream example_fin("partial_examples");
         int num_examples;
         example_fin>>num_examples;
         for(int i = 0; i < num_examples; i++)
-        {        
+        {      
+            bool added_complement = false; 
+            
             std::ifstream fin(argv[1]);
+
             std::ofstream fout("usable.txt");
             std::string next;
-            while( getline(fin, next) ) {
-            //     ^^^^^^^^^^^^^^^^^^^^^
+            while( getline(fin, next) ) 
+            {
                 fout << next << std::endl;
             }
             // system("cp from.ogv to.ogv");
@@ -78,12 +91,17 @@ int main(int argc, char** argv)
 
             int num_attributes;
             example_fin>>num_attributes;
+            std::ofstream complement_fout("complement");
+
             for(int k = 0; k < num_attributes; k++)
             {
                 int next_attr;
                 example_fin>>next_attr;
                 fout<<next_attr<<" "<<"0"<<std::endl;
+                complement_fout<<-next_attr<<" ";
             }
+            complement_fout<<"0"<<std::endl;
+            complement_fout.close();
             setUsageHelp("USAGE: %s [options] <input-file> <result-output-file>\n\n  where input may be either in plain or gzipped DIMACS.\n");
             setX86FPUPrecision();
             
@@ -158,6 +176,13 @@ int main(int argc, char** argv)
                     S.printStats();
                     printf("\n"); }
                 printf("UNSATISFIABLE\n");
+                std::ofstream sat_fout(argv[1],std::ios_base::app);
+                std::ifstream complement_fin("complement");
+                std::string line;
+                getline(complement_fin,line);
+                sat_fout<<line<<std::endl;
+                complement_fin.close();
+                added_complement = true;
                 continue;
                 exit(20);
             }
@@ -186,7 +211,18 @@ int main(int argc, char** argv)
                             fprintf(res, "%s%s%d", (i==0)?"":" ", (S.model[i]==l_True)?"":"-", i+1);
                     fprintf(res, " 0\n");
                 }else if (ret == l_False)
+                {
+                    if(!added_complement)
+                    {
+                        std::ofstream sat_fout(argv[1],std::ios_base::app);                        
+                        std::ifstream complement_fin("complement");
+                        std::string line;
+                        getline(complement_fin,line);
+                        sat_fout<<line<<std::endl;
+                        complement_fin.close();
+                    }
                     fprintf(res, "UNSAT\n");
+                }
                 else
                     fprintf(res, "INDET\n");
                 fclose(res);
