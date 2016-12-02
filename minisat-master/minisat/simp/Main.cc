@@ -49,12 +49,13 @@ static void SIGINT_exit(int) {
 
 //=================================================================================================
 // Main:
-
+std::string global_filename = "";
 int main(int argc, char** argv)
 {
     try 
     {
         std::string filename = argv[1];
+        global_filename = filename;
         std::string full_path;
         full_path += "CNF_files/" + filename;
         std::ifstream setup_fin(full_path.c_str());
@@ -182,6 +183,7 @@ int main(int argc, char** argv)
                 getline(complement_fin,line);
                 sat_fout<<line<<std::endl;
                 complement_fin.close();
+                sat_fout.close();
                 added_complement = true;
                 continue;
                 exit(20);
@@ -220,6 +222,7 @@ int main(int argc, char** argv)
                         getline(complement_fin,line);
                         sat_fout<<line<<std::endl;
                         complement_fin.close();
+                        sat_fout.close();
                     }
                     fprintf(res, "UNSAT\n");
                 }

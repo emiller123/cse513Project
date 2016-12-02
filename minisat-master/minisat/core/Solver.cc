@@ -20,6 +20,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 
 #include <math.h>
 #include <iostream>
+#include <fstream>
 
 #include "minisat/mtl/Alg.h"
 #include "minisat/mtl/Sort.h"
@@ -27,7 +28,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 #include "minisat/core/Solver.h"
 
 using namespace Minisat;
-
+extern std::string global_filename;
 //=================================================================================================
 // Options:
 
@@ -562,13 +563,34 @@ CRef Solver::propagate()
     simpDB_props -= num_props;
     if(!(confl == CRef_Undef))
     {
+      std::ofstream sat_fout(global_filename.c_str(),std::ios_base::app); 
+          
+      // Learn ALL the clauses!!!!!!
+
+      // print learned clause to make sure it makes 
+      bool should_write = true;
       Clause& c = ca[confl];
       for(int j = 0; j < c.size(); j++)
       {
         Lit q = c[j];
-        std::cout<<toInt(q)<<" ";
+        if(c.size() > 2 || toInt(q) > 100)
+        {
+          should_write = false;
+          break;
+        }      
       }
-      std::cout<<"0"<<std::endl;
+      if(should_write)
+      {
+        for(int j = 0; j < c.size(); j++)
+        {
+          Lit q = c[j];
+          std::cout<<toInt(q)<<" ";
+          sat_fout<<toInt(q)<<" ";
+        }
+        std::cout<<"0"<<std::endl;
+        sat_fout<<"0"<<std::endl;
+        sat_fout.close();
+      }
     }
     return confl;
 }
