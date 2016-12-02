@@ -562,10 +562,7 @@ CRef Solver::propagate()
     simpDB_props -= num_props;
     if(!(confl == CRef_Undef))
     {
-      // int a;
-      // std::cin>>a;
       Clause& c = ca[confl];
-      // std::cout<<c.size()<<std::endl;
       for(int j = 0; j < c.size(); j++)
       {
         Lit q = c[j];
