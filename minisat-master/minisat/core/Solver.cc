@@ -572,7 +572,7 @@ CRef Solver::propagate()
       for(int j = 0; j < c.size(); j++)
       {
         Lit q = c[j];
-        if(c.size() > 2 || toInt(q) > 100)
+        if(c.size() > 3 || toInt(q) > 75)
         {
           should_write = false;
           break;
