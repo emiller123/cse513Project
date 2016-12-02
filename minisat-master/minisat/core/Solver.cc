@@ -565,9 +565,8 @@ CRef Solver::propagate()
     {
       std::ofstream sat_fout(global_filename.c_str(),std::ios_base::app); 
           
-      // Learn ALL the clauses!!!!!!
+      // Learn ALL the clauses (actually don't cause then there will be too many)!!!!!!
 
-      // print learned clause to make sure it makes 
       bool should_write = true;
       Clause& c = ca[confl];
       for(int j = 0; j < c.size(); j++)
