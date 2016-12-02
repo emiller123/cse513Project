@@ -19,6 +19,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 **************************************************************************************************/
 
 #include <math.h>
+#include <iostream>
 
 #include "minisat/mtl/Alg.h"
 #include "minisat/mtl/Sort.h"
@@ -559,7 +560,17 @@ CRef Solver::propagate()
     }
     propagations += num_props;
     simpDB_props -= num_props;
-
+    if(!(confl == CRef_Undef))
+    {
+      Clause& c = ca[confl];
+      std::cout<<c.size()<<std::endl;
+      // for(int j = 0; j < c.size(); j++)
+      // {
+      //   Lit q = c[j];
+      //   std::cout<<toInt(q)<<" ";
+      // }
+      // std::cout<<"0"<<std::endl;
+    }
     return confl;
 }
 
