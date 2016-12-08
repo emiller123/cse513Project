@@ -561,36 +561,36 @@ CRef Solver::propagate()
     }
     propagations += num_props;
     simpDB_props -= num_props;
-    if(!(confl == CRef_Undef))
-    {
-      std::ofstream sat_fout(global_filename.c_str(),std::ios_base::app); 
+    // if(!(confl == CRef_Undef))
+    // {
+    //   std::ofstream sat_fout(global_filename.c_str(),std::ios_base::app); 
           
-      // Learn ALL the clauses (actually don't cause then there will be too many)!!!!!!
+    //   // Learn ALL the clauses (actually don't cause then there will be too many)!!!!!!
 
-      bool should_write = true;
-      Clause& c = ca[confl];
-      for(int j = 0; j < c.size(); j++)
-      {
-        Lit q = c[j];
-        if(c.size() > 3 || toInt(q) > 75)
-        {
-          should_write = false;
-          break;
-        }      
-      }
-      if(should_write)
-      {
-        for(int j = 0; j < c.size(); j++)
-        {
-          Lit q = c[j];
-          std::cout<<toInt(q)<<" ";
-          sat_fout<<toInt(q)<<" ";
-        }
-        std::cout<<"0"<<std::endl;
-        sat_fout<<"0"<<std::endl;
-        sat_fout.close();
-      }
-    }
+    //   bool should_write = true;
+    //   Clause& c = ca[confl];
+    //   for(int j = 0; j < c.size(); j++)
+    //   {
+    //     Lit q = c[j];
+    //     if(c.size() > 3 || toInt(q) > 75)
+    //     {
+    //       should_write = false;
+    //       break;
+    //     }      
+    //   }
+    //   if(should_write)
+    //   {
+    //     for(int j = 0; j < c.size(); j++)
+    //     {
+    //       Lit q = c[j];
+    //       std::cout<<toInt(q)<<" ";
+    //       sat_fout<<toInt(q)<<" ";
+    //     }
+    //     std::cout<<"0"<<std::endl;
+    //     sat_fout<<"0"<<std::endl;
+    //     sat_fout.close();
+    //   }
+    // }
     return confl;
 }
 

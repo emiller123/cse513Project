@@ -66,10 +66,11 @@ int main(int argc, char** argv)
             setup_fout << new_line << std::endl;
         }
 
-        int success_counter = 0;
-        std::ifstream example_fin("partial_examples");
+        int fail_counter = 0;
+        std::ifstream example_fin("new_partial_examples");
         int num_examples;
-        example_fin>>num_examples;
+        // example_fin>>num_examples;
+        num_examples = 1000;
         for(int i = 0; i < num_examples; i++)
         {      
             bool added_complement = false; 
@@ -85,8 +86,13 @@ int main(int argc, char** argv)
             // system("cp from.ogv to.ogv");
 
             std::ifstream query_fin("query");
+            int num_lines = 4;
+            for(int r = 0; r < num_lines; r++)
+            {
             getline(query_fin,next);
-            fout<<next<<std::endl;
+            fout<<next<<std::endl;                
+            }
+
             query_fin.close(); 
 
 
@@ -177,14 +183,14 @@ int main(int argc, char** argv)
                     S.printStats();
                     printf("\n"); }
                 printf("UNSATISFIABLE\n");
-                std::ofstream sat_fout(argv[1],std::ios_base::app);
-                std::ifstream complement_fin("complement");
-                std::string line;
-                getline(complement_fin,line);
-                sat_fout<<line<<std::endl;
-                complement_fin.close();
-                sat_fout.close();
-                added_complement = true;
+                // std::ofstream sat_fout(argv[1],std::ios_base::app);
+                // std::ifstream complement_fin("complement");
+                // std::string line;
+                // getline(complement_fin,line);
+                // sat_fout<<line<<std::endl;
+                // complement_fin.close();
+                // sat_fout.close();
+                // added_complement = true;
                 continue;
                 exit(20);
             }
@@ -206,7 +212,7 @@ int main(int argc, char** argv)
             printf(ret == l_True ? "SATISFIABLE\n" : ret == l_False ? "UNSATISFIABLE\n" : "INDETERMINATE\n");
             if (res != NULL){
                 if (ret == l_True){
-                    success_counter++;
+                    fail_counter++;
                     fprintf(res, "SAT\n");
                     for (int i = 0; i < S.nVars(); i++)
                         if (S.model[i] != l_Undef)
@@ -216,13 +222,13 @@ int main(int argc, char** argv)
                 {
                     if(!added_complement)
                     {
-                        std::ofstream sat_fout(argv[1],std::ios_base::app);                        
-                        std::ifstream complement_fin("complement");
-                        std::string line;
-                        getline(complement_fin,line);
-                        sat_fout<<line<<std::endl;
-                        complement_fin.close();
-                        sat_fout.close();
+                        // std::ofstream sat_fout(argv[1],std::ios_base::app);                        
+                        // std::ifstream complement_fin("complement");
+                        // std::string line;
+                        // getline(complement_fin,line);
+                        // sat_fout<<line<<std::endl;
+                        // complement_fin.close();
+                        // sat_fout.close();
                     }
                     fprintf(res, "UNSAT\n");
                 }
@@ -236,7 +242,27 @@ int main(int argc, char** argv)
 // #else
 //         return (ret == l_True ? 10 : ret == l_False ? 20 : 0);
 // #endif
-        std::cout<<"Ratio of Success: "<< success_counter*1.0/num_examples<<std::endl;
+        for(int k = 0; k < 50; k++)
+        {
+        std::cout<<std::endl;
+        }
+        printf("******************************************************************************\n");
+        printf("What can we decide for you today?\n");
+        std::cout<<"For query x15 -> (x54 v x 57 v x58)"<<std::endl;
+        // std::cout<<"For query -x23 -> x58"<<std::endl;
+
+        float ratio = fail_counter*1.0/num_examples;
+        // std::cout<<"Ratio of Success: "<< 1 - ratio<<std::endl;
+        float epsilon = 0.2;
+        if(fail_counter*1.0 > epsilon*num_examples)
+        {
+          std::cout<<"Reject"<<std::endl;
+        }
+        else
+        {
+            std::cout<<"Accept"<<std::endl;
+        }
+printf("******************************************************************************\n");        
         return 0;
     } catch (OutOfMemoryException&){
         printf("===============================================================================\n");
